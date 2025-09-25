@@ -1,13 +1,13 @@
 {
   "name": "rest_api",
   "version": "1.0.0",
-  "description": "",
+  "description": "Learning API",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "server": "nodemon index"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": ["NodeJs"],
+  "author": "EnBicir",
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
