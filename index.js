@@ -143,7 +143,12 @@ app.delete("/api/products/:id",(req,res)=>{
 
 
 // Delete all products
-
+app.delete("/api/products",(req,res)=>{
+    products.splice(0,products.length);
+    return res.json({
+        message: 'All products are deleted'
+    });
+});
 
 
 app.listen(3000,()=> console.log('server is running at http://localhost:3000'));
