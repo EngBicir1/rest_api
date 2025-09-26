@@ -26,6 +26,7 @@ app.get("/api/products", (req,res)=>{
     res.json(products);
 })
 
+
 // Show Specific product by id
 app.get("/api/products/:id", (req,res)=>{
     const {id} = req.params;
@@ -41,16 +42,11 @@ app.get("/api/products/:id", (req,res)=>{
 
 
 // insert A product Data
-app.use(express.json());
+app.use(express.json()); // to use req.body
 
 app.post("/api/products",(req,res)=>{
 
-    const schema = joi.object({
-        name: joi.string().min(3).max(20).required(),
-        price: joi.number().required(),
-    })
-
-    const {error} = schema.validate(req.body);
+    const {error} = validation(req.body);
 
     if(error){
         res.status(400).json({
@@ -70,8 +66,83 @@ app.post("/api/products",(req,res)=>{
 
 
 // Update Specific product data (Using Put Method)
+app.put("/api/products/:id",(req,res)=>{
+
+    const {error} = validation(req.body);
+    if(error){
+        res.status(400).json({
+            message: error.details[0].message
+        })
+    };
+
+    const index = products.findIndex(prod => prod.id === req.params.id);
+    if(index === -1){
+        return res.status(404).json({
+            message: 'Product is not found with this id'
+        });
+    }
+
+    products[index].name = req.body.name;
+    products[index].price = req.body.price;
+    
+    return res.json({
+        product : products[index]
+    });
+
+
+});
+
+
+// validation schema
+function validation(body){
+        const schema = joi.object({
+            name: joi.string().min(3).max(20).required(),
+            price: joi.number().required(),
+        })
+
+        return schema.validate(body);
+}
+
 // Update Specific product data (Using PATCH Method)
+
+app.patch("/api/products/:id",(req,res)=>{
+    const index = products.findIndex(prod => prod.id === req.params.id);
+    if(index === -1){
+        return res.status(404).json({
+            message: 'Product is not found with this id'
+        });
+    }
+
+    let UpdatedProduct = {
+        ...products[index],
+        ...req.body
+    }
+    products[index] = UpdatedProduct;
+    return res.json(UpdatedProduct);
+    // {name: 'apple', price: 200}
+})
+
+
+
 // Delete Specific product data
+
+app.delete("/api/products/:id",(req,res)=>{
+    const index = products.findIndex(prod => prod.id === req.params.id);
+    if(index === -1){
+        return res.status(404).json({
+            message: 'Product is not found with this id'
+        });
+    }
+    products.splice(index,1);
+    return res.json({
+        message: 'Product is deleted successfully'
+    });
+});
+
+
+
+// Delete all products
+
 
 
 app.listen(3000,()=> console.log('server is running at http://localhost:3000'));
