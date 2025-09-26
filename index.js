@@ -1,7 +1,7 @@
-const express = require('express');
-const app = express();
-
-const { v4: uuidv4 } = require('uuid');
+const express = require('express'); // import express
+const app = express(); // create express app
+const joi = require('joi'); //using for validation
+const { v4: uuidv4 } = require('uuid'); // using for unique id
 
 
 app.get('/',(req,res)=>{
@@ -45,7 +45,20 @@ app.use(express.json());
 
 app.post("/api/products",(req,res)=>{
 
-    const product = {
+    const schema = joi.object({
+        name: joi.string().min(3).max(20).required(),
+        price: joi.number().required(),
+    })
+
+    const {error} = schema.validate(req.body);
+
+    if(error){
+        res.status(400).json({
+            message: error.details[0].message
+        })
+    }
+
+    const product = { 
         id: uuidv4(),
         name: req.body.name,
         price: req.body.price,
