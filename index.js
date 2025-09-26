@@ -1,6 +1,9 @@
 const express = require('express');
 const app = express();
 
+const { v4: uuidv4 } = require('uuid');
+
+
 app.get('/',(req,res)=>{
     res.send('hellow express');
 });
@@ -36,9 +39,22 @@ app.get("/api/products/:id", (req,res)=>{
     return res.json(product);
 });
 
-
-
 // insert A product Data
+app.use(express.json());
+
+app.post("/api/products",(req,res)=>{
+
+    const product = {
+        id: uuidv4(),
+        name: req.body.name,
+        price: req.body.price,
+    };
+    products.push(product);
+    return res.json(product);
+});
+
+
+
 // Update Specific product data (Using Put Method)
 // Update Specific product data (Using PATCH Method)
 // Delete Specific product data
