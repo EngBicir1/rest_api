@@ -39,6 +39,7 @@ app.get("/api/products/:id", (req,res)=>{
     return res.json(product);
 });
 
+
 // insert A product Data
 app.use(express.json());
 
